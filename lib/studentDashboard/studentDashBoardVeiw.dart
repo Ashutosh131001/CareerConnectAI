@@ -75,9 +75,9 @@ class StudentDashboard extends StatelessWidget {
 
                 // 3. AI Career Assistant
                 _PremiumActionCard(
-                  title: 'AI Career Assistant',
-                  subtitle: 'Interview prep & smart guidance',
-                  icon: Icons.auto_awesome_rounded,
+                  title: 'Manage Profile',
+                  subtitle: 'Update your progress and SkillSet',
+                  icon: Icons.person,
                   gradientColors: const [
                     Color(0xFF7C3AED),
                     Color(0xFF8B5CF6),

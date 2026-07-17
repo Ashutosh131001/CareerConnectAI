@@ -283,7 +283,7 @@ class _AdminWelcomeBanner extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Manage ITM Placements',
+                    'Manage NCU Placements',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
