@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 
 class OpenAIService {
   // TODO: Replace with your actual OpenAI API Key
-  static const String _apiKey = '';
+  static const String _apiKey =
+      "";
   static const String _endpoint = 'https://api.openai.com/v1/chat/completions';
 
   // This list acts as the AI's memory

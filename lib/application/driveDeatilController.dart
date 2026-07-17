@@ -1,5 +1,6 @@
 import 'package:careerconnect/application/applicationModel.dart';
 import 'package:careerconnect/application/applicationRepo.dart';
+import 'package:careerconnect/application/eligibitlity.dart';
 import 'package:careerconnect/placementDrive/placementdriveModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -65,29 +66,22 @@ class DriveDetailController extends GetxController {
 
       final studentData = studentDoc.data() as Map<String, dynamic>;
 
-      // Safely parse the student's stats (assuming you saved these during Student Setup)
-      final double studentCgpa = (studentData['cgpa'] ?? 0.0).toDouble();
-      final int studentBacklogs = studentData['activeBacklogs'] ?? 0;
+      // 2. THE ELIGIBILITY CHECK (Using the Strategy Pattern)
+      // Instantiate the policy (you can also inject this via the constructor)
+      EligibilityPolicy policy = StandardDriveEligibility();
+      EligibilityResult result = policy.evaluate(studentData, drive);
 
-      // 2. THE ELIGIBILITY CHECK
-      if (studentCgpa < drive.minCgpa) {
+      if (!result.isEligible) {
+        // Show all reasons why they were rejected
         Get.snackbar(
           'Not Eligible',
-          'Your CGPA ($studentCgpa) is below the required ${drive.minCgpa}.',
+          result.reasons.join(
+            '\n',
+          ), // Joins the list of reasons into a single string with line breaks
           backgroundColor: Colors.red.shade600,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM,
-        );
-        return; // STOPS THE APPLICATION
-      }
-
-      if (studentBacklogs > drive.maxActiveBacklogs) {
-        Get.snackbar(
-          'Not Eligible',
-          'You have $studentBacklogs active backlogs. Maximum allowed is ${drive.maxActiveBacklogs}.',
-          backgroundColor: Colors.red.shade600,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 4),
         );
         return; // STOPS THE APPLICATION
       }
@@ -99,7 +93,8 @@ class DriveDetailController extends GetxController {
         driveId: drive.id,
         companyName: drive.companyName,
         jobRole: drive.jobRole,
-        status: 'Pending',
+        status:
+            'Pending', // Tip: Make sure to use an Enum for Status if you haven't already!
         appliedAt: DateTime.now(),
       );
 

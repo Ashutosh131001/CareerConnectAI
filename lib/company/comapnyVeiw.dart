@@ -16,96 +16,246 @@ class AddCompanyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF0F172A);
+    const backgroundColor = Color(0xFFF8FAFC); // Premium slate background
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: primaryColor),
-        title: const Text(
-          'Add New Company',
-          style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-        ),
-      ),
+      backgroundColor: backgroundColor,
       body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Recruiter Details',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: primaryColor,
+        child: Column(
+          children: [
+            _buildCustomHeader(context, primaryColor),
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 20.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeaderBanner(),
+                      const SizedBox(height: 32),
+
+                      // Card 1: Core Identity
+                      _FormSectionCard(
+                        title: 'Core Identity',
+                        icon: Icons.business_center_rounded,
+                        children: [
+                          _PremiumInputField(
+                            controller: controller.nameController,
+                            label: 'Company Name',
+                            hint: 'e.g. Google, TCS, Microsoft',
+                            icon: Icons.domain_rounded,
+                            validator: (value) => value!.trim().isEmpty
+                                ? 'Company name is required'
+                                : null,
+                          ),
+                          const SizedBox(height: 16),
+                          _PremiumInputField(
+                            controller: controller.sectorController,
+                            label: 'Industry Sector',
+                            hint: 'e.g. FinTech, E-Commerce, IT',
+                            icon: Icons.category_rounded,
+                            validator: (value) => value!.trim().isEmpty
+                                ? 'Sector is required'
+                                : null,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Card 2: Digital Presence & Details
+                      _FormSectionCard(
+                        title: 'Digital & Details',
+                        icon: Icons.language_rounded,
+                        children: [
+                          _PremiumInputField(
+                            controller: controller.websiteController,
+                            label: 'Company Website',
+                            hint: 'e.g. https://www.google.com',
+                            icon: Icons.link_rounded,
+                            keyboardType: TextInputType.url,
+                            validator: (value) => value!.trim().isEmpty
+                                ? 'Website is required'
+                                : null,
+                          ),
+                          const SizedBox(height: 16),
+                          _PremiumInputField(
+                            controller: controller.descriptionController,
+                            label: 'Company Description',
+                            hint:
+                                'Brief overview of the company, work culture, and requirements...',
+                            icon: Icons.description_rounded,
+                            maxLines: 4,
+                            validator: (value) => value!.trim().isEmpty
+                                ? 'Description is required'
+                                : null,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 40),
+
+                      _SaveCompanyButton(
+                        controller: controller,
+                        formKey: _formKey,
+                      ),
+                      const SizedBox(height: 40), // Bottom padding buffer
+                    ],
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Enter the details of the visiting company to prepare for placement drives.',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                ),
-                const SizedBox(height: 32),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-                _PremiumInputField(
-                  controller: controller.nameController,
-                  label: 'Company Name',
-                  hint: 'e.g. Google, TCS, Microsoft',
-                  icon: Icons.business_rounded,
-                  validator: (value) => value!.trim().isEmpty ? 'Company name is required' : null,
-                ),
-                const SizedBox(height: 16),
-
-                _PremiumInputField(
-                  controller: controller.sectorController,
-                  label: 'Industry Sector',
-                  hint: 'e.g. FinTech, E-Commerce, IT Services',
-                  icon: Icons.category_rounded,
-                  validator: (value) => value!.trim().isEmpty ? 'Sector is required' : null,
-                ),
-                const SizedBox(height: 16),
-
-                _PremiumInputField(
-                  controller: controller.websiteController,
-                  label: 'Company Website',
-                  hint: 'e.g. https://www.google.com',
-                  icon: Icons.language_rounded,
-                  keyboardType: TextInputType.url,
-                  validator: (value) => value!.trim().isEmpty ? 'Website is required' : null,
-                ),
-                const SizedBox(height: 16),
-
-                _PremiumInputField(
-                  controller: controller.descriptionController,
-                  label: 'Company Description',
-                  hint: 'Brief overview of the company...',
-                  icon: Icons.description_rounded,
-                  maxLines: 4,
-                  validator: (value) => value!.trim().isEmpty ? 'Description is required' : null,
-                ),
-                const SizedBox(height: 40),
-
-                _SaveCompanyButton(
-                  controller: controller,
-                  formKey: _formKey,
-                  primaryColor: primaryColor,
+  // Custom modern header
+  Widget _buildCustomHeader(BuildContext context, Color primaryColor) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+              color: primaryColor,
+              onPressed: () => Get.back(),
+            ),
+          ),
+          const SizedBox(width: 20),
+          Text(
+            'New Company',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              color: primaryColor,
+              letterSpacing: -0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Beautiful contextual banner
+  Widget _buildHeaderBanner() {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2563EB).withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.add_business_rounded,
+            color: Color(0xFF2563EB),
+            size: 28,
           ),
         ),
-      ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Recruiter Details',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF0F172A),
+                  letterSpacing: -0.3,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Register a new visiting company to prepare for upcoming placement drives.',
+                style: TextStyle(
+                  color: Colors.grey.shade500,
+                  fontSize: 13,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
 
 // -----------------------------------------------------------------
-// SEPARATED WIDGETS 
+// SEPARATED WIDGETS
 // -----------------------------------------------------------------
+
+class _FormSectionCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final List<Widget> children;
+
+  const _FormSectionCard({
+    required this.title,
+    required this.icon,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 15,
+            spreadRadius: 0,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: const Color(0xFF0F172A), size: 20),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF0F172A),
+                  letterSpacing: -0.3,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          ...children,
+        ],
+      ),
+    );
+  }
+}
 
 class _PremiumInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -135,27 +285,53 @@ class _PremiumInputField extends StatelessWidget {
       controller: controller,
       keyboardType: keyboardType,
       maxLines: maxLines,
+      style: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w500,
+        color: Color(0xFF0F172A),
+      ),
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
         alignLabelWithHint: maxLines > 1,
-        labelStyle: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+        labelStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
         hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+        floatingLabelStyle: const TextStyle(
+          color: accentColor,
+          fontWeight: FontWeight.bold,
+        ),
         filled: true,
         fillColor: inputFillColor,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: accentColor, width: 1.5),
         ),
-        prefixIcon: Padding(
-          padding: EdgeInsets.only(bottom: maxLines > 1 ? 70.0 : 0),
-          child: Icon(icon, color: Colors.grey.shade500),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.red.shade300, width: 1),
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.red.shade400, width: 1.5),
+        ),
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(
+            bottom: maxLines > 1 ? (24.0 * (maxLines - 1)) : 0,
+          ),
+          child: Icon(icon, color: Colors.grey.shade400, size: 22),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 20,
+        ),
       ),
       validator: validator,
     );
@@ -165,16 +341,15 @@ class _PremiumInputField extends StatelessWidget {
 class _SaveCompanyButton extends StatelessWidget {
   final CompanyController controller;
   final GlobalKey<FormState> formKey;
-  final Color primaryColor;
 
-  const _SaveCompanyButton({
-    required this.controller,
-    required this.formKey,
-    required this.primaryColor,
-  });
+  const _SaveCompanyButton({required this.controller, required this.formKey});
 
   @override
   Widget build(BuildContext context) {
+    const primaryColor = Color(
+      0xFF2563EB,
+    ); // Changed to vibrant blue for action
+
     return Obx(
       () => SizedBox(
         width: double.infinity,
@@ -190,28 +365,36 @@ class _SaveCompanyButton extends StatelessWidget {
             backgroundColor: primaryColor,
             foregroundColor: Colors.white,
             disabledBackgroundColor: primaryColor.withOpacity(0.6),
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(vertical: 18),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(16),
             ),
+            elevation: 10,
+            shadowColor: primaryColor.withOpacity(0.4),
           ),
           child: controller.isLoading.value
               ? const SizedBox(
-                  height: 22,
-                  width: 22,
+                  height: 24,
+                  width: 24,
                   child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
+                    strokeWidth: 3,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 )
-              : const Text(
-                  'Add Company',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.2,
-                  ),
+              : const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.domain_add_rounded, size: 20),
+                    SizedBox(width: 8),
+                    Text(
+                      'Register Company',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
                 ),
         ),
       ),

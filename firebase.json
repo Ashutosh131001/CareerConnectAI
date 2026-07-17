@@ -1,1 +1,48 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"careerconnect-413fb","appId":"1:18805303101:android:a790fc81b26e90a7824754","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"careerconnect-413fb","appId":"1:18805303101:ios:ca76c00e8e7831e8824754","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"careerconnect-413fb","configurations":{"android":"1:18805303101:android:a790fc81b26e90a7824754","ios":"1:18805303101:ios:ca76c00e8e7831e8824754"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "careerconnect-413fb",
+          "appId": "1:18805303101:android:a790fc81b26e90a7824754",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "careerconnect-413fb",
+          "appId": "1:18805303101:ios:ca76c00e8e7831e8824754",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "careerconnect-413fb",
+          "configurations": {
+            "android": "1:18805303101:android:a790fc81b26e90a7824754",
+            "ios": "1:18805303101:ios:ca76c00e8e7831e8824754"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ]
+}
